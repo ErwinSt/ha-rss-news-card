@@ -1,6 +1,6 @@
 {
   "name": "RSS News Card",
   "render_readme": true,
-  "filename": "ha-rss-news-card.js",
+  "filename": "dist/ha-rss-news-card.js",
   "content_in_root": true
 }

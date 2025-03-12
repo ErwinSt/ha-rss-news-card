@@ -1,10 +1,18 @@
-import { LitElement, html, css } from 'lit';
-import { property, customElement } from 'lit/decorators.js';
+import { LitElement, html, css } from 'https://unpkg.com/lit@2.0.0/index.js?module';
 
-@customElement('ha-rss-news-card-editor')
 class HaRssNewsCardEditor extends LitElement {
-  @property({ type: Object }) hass = {};
-  @property({ type: Object }) _config = {};
+  static get properties() {
+    return {
+      hass: { type: Object },
+      _config: { type: Object }
+    };
+  }
+  
+  constructor() {
+    super();
+    this.hass = {};
+    this._config = {};
+  }
 
   static get styles() {
     return css`
@@ -47,6 +55,7 @@ class HaRssNewsCardEditor extends LitElement {
       show_date: true,
       show_image: true,
       date_format: 'relative',
+      use_proxy: true,
       ...config
     };
   }
@@ -191,7 +200,20 @@ class HaRssNewsCardEditor extends LitElement {
             <ha-list-item value="standard">Standard (JJ/MM/AAAA)</ha-list-item>
           </ha-select>
         </div>
+        
+        <div class="row">
+          <div class="label">Utiliser le proxy</div>
+          <ha-switch
+            name="use_proxy"
+            .checked="${this._config.use_proxy !== false}"
+            .configValue="${"use_proxy"}"
+            @change="${this._valueChanged}"
+          ></ha-switch>
+        </div>
       </div>
     `;
   }
 }
+
+// Register the editor
+customElements.define('ha-rss-news-card-editor', HaRssNewsCardEditor);

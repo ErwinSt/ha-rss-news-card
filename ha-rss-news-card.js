@@ -1,19 +1,37 @@
-import { LitElement, html, css } from 'lit';
-import { property, customElement } from 'lit/decorators.js';
+import { LitElement, html, css } from 'https://unpkg.com/lit@2.0.0/index.js?module';
 
-@customElement('ha-rss-news-card')
 class HaRssNewsCard extends LitElement {
-  @property({ type: String }) title = 'RSS News';
-  @property({ type: String }) entity = '';
-  @property({ type: Number }) max_items = 5;
-  @property({ type: String }) url = '';
-  @property({ type: Boolean }) show_date = true;
-  @property({ type: Boolean }) show_image = true;
-  @property({ type: String }) date_format = 'relative';
-  @property({ type: Object }) hass = {};
-  @property({ type: Array }) _items = [];
-  @property({ type: Boolean }) _loading = true;
-  @property({ type: Boolean }) _error = false;
+  static get properties() {
+    return {
+      title: { type: String },
+      entity: { type: String },
+      max_items: { type: Number },
+      url: { type: String },
+      show_date: { type: Boolean },
+      show_image: { type: Boolean },
+      date_format: { type: String },
+      hass: { type: Object },
+      _items: { type: Array },
+      _loading: { type: Boolean },
+      _error: { type: Boolean },
+      use_proxy: { type: Boolean }
+    };
+  }
+  
+  constructor() {
+    super();
+    this.title = 'RSS News';
+    this.entity = '';
+    this.max_items = 5;
+    this.url = '';
+    this.show_date = true;
+    this.show_image = true;
+    this.date_format = 'relative';
+    this._items = [];
+    this._loading = true;
+    this._error = false;
+    this.use_proxy = true;
+  }
 
   static get styles() {
     return css`
@@ -202,18 +220,30 @@ class HaRssNewsCard extends LitElement {
     }
     
     try {
-      // Use Home Assistant as a proxy to avoid CORS issues
-      const proxyUrl = `/api/hassio_ingress/rss-proxy?url=${encodeURIComponent(url)}`;
+      let fetchUrl = url;
       
-      const response = await fetch(proxyUrl);
+      // Use Home Assistant as a proxy to avoid CORS issues
+      if (this.use_proxy) {
+        fetchUrl = `/api/rss_proxy?url=${encodeURIComponent(url)}`;
+      }
+      
+      const response = await fetch(fetchUrl);
       
       if (!response.ok) {
         throw new Error('Failed to fetch RSS feed');
       }
       
-      const text = await response.text();
+      let xmlContent;
+      
+      if (this.use_proxy) {
+        const jsonResponse = await response.json();
+        xmlContent = jsonResponse.content;
+      } else {
+        xmlContent = await response.text();
+      }
+      
       const parser = new DOMParser();
-      const xml = parser.parseFromString(text, 'application/xml');
+      const xml = parser.parseFromString(xmlContent, 'application/xml');
       
       // Check if it's Atom or RSS
       const isAtom = xml.querySelector('feed');
@@ -458,7 +488,18 @@ class HaRssNewsCard extends LitElement {
       max_items: 5,
       show_date: true,
       show_image: true,
-      date_format: 'relative'
+      date_format: 'relative',
+      use_proxy: true
     };
   }
 }
+
+// Register the element
+customElements.define('ha-rss-news-card', HaRssNewsCard);
+
+window.customCards = window.customCards || [];
+window.customCards.push({
+  type: 'ha-rss-news-card',
+  name: 'RSS News Card',
+  description: 'Card that displays RSS news feed',
+});
