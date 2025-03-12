@@ -1,4 +1,6 @@
-import { LitElement, html, css } from 'https://unpkg.com/lit@2.0.0/index.js?module';
+const LitElement = window.LitElement || Object.getPrototypeOf(customElements.get("ha-panel-lovelace"));
+const html = window.lit.html;
+const css = window.lit.css;
 
 class HaRssNewsCard extends LitElement {
   static get properties() {
@@ -483,6 +485,7 @@ class HaRssNewsCard extends LitElement {
   // What should be the default config for the card
   static getStubConfig() {
     return {
+      type: 'custom:ha-rss-news-card',
       title: 'RSS News',
       url: 'https://www.lemonde.fr/rss/une.xml',
       max_items: 5,
@@ -494,12 +497,14 @@ class HaRssNewsCard extends LitElement {
   }
 }
 
-// Register the element
+// According to Home Assistant custom card conventions, the element tag name
+// should be the same as the type attribute but without the 'custom:' prefix
 customElements.define('ha-rss-news-card', HaRssNewsCard);
 
 window.customCards = window.customCards || [];
 window.customCards.push({
-  type: 'ha-rss-news-card',
+  type: 'custom:ha-rss-news-card',
   name: 'RSS News Card',
   description: 'Card that displays RSS news feed',
+  preview: false
 });

@@ -1,4 +1,6 @@
-import { LitElement, html, css } from 'https://unpkg.com/lit@2.0.0/index.js?module';
+const LitElement = window.LitElement || Object.getPrototypeOf(customElements.get("ha-panel-lovelace"));
+const html = window.lit.html;
+const css = window.lit.css;
 
 class HaRssNewsCardEditor extends LitElement {
   static get properties() {

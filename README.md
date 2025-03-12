@@ -66,15 +66,15 @@ lovelace:
 | Option | Type | Par défaut | Description |
 |--------|------|------------|-------------|
 | type | string | **Requis** | `custom:ha-rss-news-card` |
-| title | string | `Actualités` | Titre de la carte |
+| title | string | `RSS News` | Titre de la carte |
 | url | string | `null` | URL du flux RSS/Atom |
 | entity | string | `null` | Entité HA contenant l'URL du flux |
 | max_items | number | `5` | Nombre maximum d'articles à afficher |
 | show_description | boolean | `true` | Afficher les descriptions |
-| relative_time | boolean | `true` | Utiliser le format de date relatif |
+| show_date | boolean | `true` | Afficher les dates |
+| show_image | boolean | `true` | Afficher les images |
+| date_format | string | `relative` | Format de date (`relative` ou `standard`) |
 | use_proxy | boolean | `true` | Utiliser le proxy RSS pour éviter les problèmes CORS |
-| show_images | boolean | `true` | Afficher les images des articles |
-| date_format | string | `DD/MM/YYYY HH:mm` | Format de date personnalisé |
 
 ### Exemple de configuration
 
@@ -84,8 +84,10 @@ title: Actualités France
 url: https://www.lemonde.fr/rss/une.xml
 max_items: 5
 show_description: true
-relative_time: true
-show_images: true
+show_date: true
+date_format: relative
+show_image: true
+use_proxy: true
 ```
 
 ## Dépannage
