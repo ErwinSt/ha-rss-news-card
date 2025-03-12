@@ -1,0 +1,26 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release:
+    name: Prepare release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # Build release files
+      - name: Prepare release files
+        run: |
+          zip -r rss-news-card.zip ./ha-rss-news-card.js ./ha-rss-news-card-editor.js ./LICENSE
+
+      # Upload to release
+      - name: Upload release files
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            rss-news-card.zip
+            ./ha-rss-news-card.js
+            ./ha-rss-news-card-editor.js
