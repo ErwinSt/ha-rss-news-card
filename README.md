@@ -65,7 +65,7 @@ lovelace:
 
 | Option | Type | Par défaut | Description |
 |--------|------|------------|-------------|
-| type | string | **Requis** | `custom:ha-rss-news-card` |
+| type | string | **Requis** | `custom:rss-news-card` |
 | title | string | `RSS News` | Titre de la carte |
 | url | string | `null` | URL du flux RSS/Atom |
 | entity | string | `null` | Entité HA contenant l'URL du flux |
@@ -79,7 +79,7 @@ lovelace:
 ### Exemple de configuration
 
 ```yaml
-type: custom:ha-rss-news-card
+type: custom:rss-news-card
 title: Actualités France
 url: https://www.lemonde.fr/rss/une.xml
 max_items: 5
